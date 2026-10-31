@@ -1,4 +1,4 @@
-# ai-trading-copilot-kit
+# trading-assistant-kit
 
 A small, **human-in-the-loop** trading setup you can rebuild with an AI agent
 (Grok Bot, Claude, Cursor, ...). The AI researches and proposes; **you approve every

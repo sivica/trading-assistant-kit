@@ -85,13 +85,14 @@ refuses bets above `max_buy_usd` (default $5).
 
 ### 3.3 Dry run, then live
 ```bash
-systemctl daemon-reload
 cp /opt/pm-stoploss-bot/systemd/pm-stoploss.service /etc/systemd/system/
+systemctl daemon-reload
 systemctl enable --now pm-stoploss
 journalctl -u pm-stoploss -f          # watch: it should log HOLD / "would sell" lines
 pmbot status                          # positions, stops, confirm timers, game times
 ```
-Place a tiny test bet (preview first, then confirm):
+Place a tiny test bet (preview first, then confirm). Note: `pmbot buy` places a **real** order
+even while the service is in dry-run; dry-run only stops the automatic stop-loss sells:
 ```bash
 echo NO  | pmbot buy <MARKET_URL> --outcome Yes --usd 4 --max-price 0.80 --stop 0.55   # preview only
 echo YES | pmbot buy <MARKET_URL> --outcome Yes --usd 4 --max-price 0.80 --stop 0.55   # real order

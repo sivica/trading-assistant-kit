@@ -18,7 +18,8 @@ your own timezone; adjust them when daylight saving time changes.
 - Polymarket bets that settled: result in $, update the picks log status.
 
 ## 3. Earnings fast alert (on earnings days, around the release windows)
-- Before US open (~12:00-15:30 local for CET) and after US close (~22:15-23:45 local).
+- Before the US open (roughly 12:00-15:30 Central European time) and after the US close
+  (roughly 22:15-23:45 Central European time). Shift these to your own timezone.
 - For companies on your watch list that just reported: headline numbers vs. estimates,
   guidance, and the first price reaction. Suggest a reaction trade only if it meets the
   thresholds in ASSISTANT.md, with Approve/Skip.
