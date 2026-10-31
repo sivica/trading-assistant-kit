@@ -1,0 +1,3 @@
+#!/bin/sh
+# Install as /usr/local/bin/hltrail. Run as the hlbot user: sudo -u hlbot hltrail status
+exec env HLTRAIL_HOME=/home/hlbot/.hltrail /opt/hltrail/venv/bin/python /opt/hltrail/hltrail.py "$@"

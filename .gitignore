@@ -1,0 +1,26 @@
+# secrets / keys / credentials: never commit
+*.key
+*.pem
+.env
+.env.*
+env
+bot.env
+*.json
+!package.json
+wallet.address
+deposit_wallet.address
+config.yaml
+auto_stops.yaml
+*.bak*
+# runtime state and logs
+state.json
+status.json
+*.log
+actions.log
+picks-log.csv
+# python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/

@@ -1,0 +1,36 @@
+# Polymarket stop-loss bot settings. Prices are in dollars: 0.20 = 20 cents.
+# After editing, restart the bot:  sudo systemctl restart pm-stoploss
+
+# SAFETY SWITCH. While true, the bot only LOGS what it would sell.
+# Change to false only after `pmbot status` and a dry run look right.
+dry_run: true
+
+poll_interval_seconds: 60      # how often to check (seconds)
+confirm_checks: 2              # stop must be hit this many checks in a row (ignores 1-tick flickers)
+stop_confirm_sec: 180          # stop sells only after the best bid stays <= stop this long (seconds)
+live_confirm_sec: 600          # same, while a sports game is in progress
+live_window_hours: 2.5         # game counts as in progress from its start time for this long
+retry_cooldown_seconds: 120    # wait this long before retrying a sell that did not fully fill
+cancel_open_orders_before_stop: true   # cancel your own resting orders on that outcome before stop-selling
+max_buy_usd: 5                 # `pmbot buy` refuses bigger bets than this
+geoblock_check_minutes: 30     # re-check that this server is allowed to trade
+use_deposit_wallet: true       # trade via Polymarket's Deposit Wallet (needed for new wallets)
+
+# Rules for every position, unless overridden below.
+default:
+  stop_drop: 0.20        # sell everything if the best bid is 20 cents below your average entry
+  stop_pct: null         # optional: e.g. 0.5 = also sell if the bid falls to half your entry
+  stop_price: null       # optional: a fixed price for all bets (rarely useful as a default)
+  min_sell_price: 0.05   # floor: never sell below 5 cents (at that point holding costs little)
+  max_slippage: 0.02     # accept fills down to (best bid - 2 cents), never below the floor
+
+# Per-market overrides. Key = market slug (from the polymarket.com URL),
+# event slug, or the exact token id. The most specific match wins.
+# Uncomment and edit the examples.
+markets: {}
+#  some-event-slug:   # event slug: applies to all its outcomes you hold
+#    outcome: "No"          # optional: only the "No" side
+#    stop_price: 0.55       # sell if best bid <= 55 cents (in addition to the default drop rule)
+#    min_sell_price: 0.30
+#  some-market-slug:
+#    enabled: false         # never auto-sell this one

@@ -1,0 +1,20 @@
+# hltrail config -> copy to /home/hlbot/.hltrail/config.yaml
+# Re-read every cycle (switching dry_run -> false needs a service restart).
+# This file holds NO secrets. The API wallet key (live mode only) goes in
+# /home/hlbot/.hltrail/env as HL_API_WALLET_KEY=... (chmod 600, owner hlbot).
+
+dry_run: true                       # SAFETY SWITCH: only logs what it would do
+account_address: "<YOUR_MAIN_HYPERLIQUID_ADDRESS>"   # public address of your main account (not the API wallet)
+
+dexes: ["", "xyz"]       # "" = main crypto dex, "xyz" = HIP-3 stock perps
+interval_sec: 120
+trail_pct: 0.04          # stop sits 4% behind the best price
+activate_pct: 0.04       # start trailing once the best price is 4% in profit from entry
+min_step_pct: 0.005      # only move if the stop improves by >= 0.5% of price
+stop_slippage_pct: 0.10  # live only: limit offset for the stop-market order
+markets: {}
+# example per-coin overrides:
+#   BTC:
+#     trail_pct: 0.03
+#   "xyz:AAPL":
+#     enabled: false

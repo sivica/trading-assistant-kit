@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Install as /usr/local/bin/pmbot. Runs the bot CLI as the pmbot user so files in
+# /home/pmbot/.pmbot keep the right owner (and root never owns the wallet files).
+if [ "$(id -un)" = pmbot ]; then
+  exec env PMBOT_HOME=/home/pmbot/.pmbot /opt/pm-stoploss-bot/venv/bin/python /opt/pm-stoploss-bot/pmbot.py "$@"
+fi
+exec sudo -u pmbot -H env PMBOT_HOME=/home/pmbot/.pmbot /opt/pm-stoploss-bot/venv/bin/python /opt/pm-stoploss-bot/pmbot.py "$@"

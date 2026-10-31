@@ -1,0 +1,22 @@
+[Unit]
+Description=Hyperliquid trailing-stop helper (hltrail)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=hlbot
+Group=hlbot
+Environment=HLTRAIL_HOME=/home/hlbot/.hltrail
+Environment=PYTHONUNBUFFERED=1
+# Optional: your timezone for log lines, e.g. Europe/Berlin
+# Environment=LOCAL_TZ=UTC
+ExecStart=/opt/hltrail/venv/bin/python /opt/hltrail/hltrail.py run
+Restart=on-failure
+RestartSec=30
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/home/hlbot/.hltrail
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

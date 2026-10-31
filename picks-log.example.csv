@@ -1,0 +1,2 @@
+date,market,pick,price_at_pick,stop,source,taken,status,result_usd,notes
+2026-01-05,EXAMPLE: BTC perp,short 0.0001 @ 80000,80000,84000,AI idea,yes,open,,example row - delete
