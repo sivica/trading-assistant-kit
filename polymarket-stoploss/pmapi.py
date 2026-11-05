@@ -68,17 +68,41 @@ def geoblock() -> dict:
     return http_json(GEOBLOCK)
 
 
+_V2_TO_V1 = {"token_id": "asset", "current_size": "size", "avg_price": "avgPrice",
+             "current_price": "curPrice", "current_value": "currentValue",
+             "condition_id": "conditionId", "event_slug": "eventSlug", "proxy_wallet": "proxyWallet",
+             "outcome_index": "outcomeIndex", "negative_risk": "negativeRisk",
+             "total_pnl": "cashPnl", "percent_pnl": "percentPnl", "realized_pnl": "realizedPnl",
+             "end_date": "endDate", "opposite_outcome": "oppositeOutcome",
+             "opposite_token_id": "oppositeAsset", "total_cost_usdc": "initialValue"}
+
+
+def _v1_shape(row: dict) -> dict:
+    """Data API v2 uses snake_case; keep v2 keys and add the v1 names the bot uses."""
+    out = dict(row)
+    for k2, k1 in _V2_TO_V1.items():
+        if k2 in row and k1 not in out:
+            out[k1] = row[k2]
+    return out
+
+
 def positions(user: str) -> list[dict]:
-    out, offset = [], 0
-    while True:
-        page = http_json(f"{DATA_API}/positions", {"user": user, "sizeThreshold": 0,
-                                                    "limit": 500, "offset": offset})
-        if not isinstance(page, list):
+    """Data API v2 (v1 returns 410 Gone): {"data": [...], "pagination": {"next_cursor": ...}}."""
+    out, cursor = [], None
+    for _ in range(100):
+        q = {"user": user, "sizeThreshold": 0, "limit": 500}
+        if cursor:
+            q["cursor"] = cursor
+        page = http_json(f"{DATA_API}/v2/positions", q)
+        rows = page.get("data") if isinstance(page, dict) else page
+        if not isinstance(rows, list):
             raise RuntimeError(f"unexpected positions response: {str(page)[:200]}")
-        out.extend(page)
-        if len(page) < 500:
+        out.extend(_v1_shape(r) for r in rows)
+        pg = page.get("pagination") or {} if isinstance(page, dict) else {}
+        cursor = pg.get("next_cursor")
+        if not cursor or not pg.get("has_more", True):
             return out
-        offset += 500
+    return out
 
 
 def book(token_id: str) -> Optional[dict]:
